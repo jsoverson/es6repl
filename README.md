@@ -16,6 +16,13 @@ repl intended for use as an iframe for blogging/documentation purposes.
 * Generated links are executed command-by-command vs as a whole program.
 * Styled to be more amenable to embedding.
 
+## Examples
+
+* [Destructuring](http://jsoverson.github.io/es6repl/#____let%20%7B%20objectProperty%20%3A%20localVariable%20%7D%20%3D%20%7B%20objectProperty%20%3A%20%22objectValue%22%20%7D%0AlocalVariable)
+* [Template Strings](http://jsoverson.github.io/es6repl/#____var%20name%20%3D%20%22Bob%22%2C%20time%20%3D%20%22today%22%3B%0A%60Hello%20%24%7Bname%7D%2C%20how%20are%20you%20%24%7Btime%7D%3F%60)
+* [Default Values & Object shorthand](http://jsoverson.github.io/es6repl/#____function%20point(x%20%3D%200%2C%20y%20%3D%200)%20%7B%0Areturn%20%7B%20x%2C%20y%20%7D%0A%7D%0Apoint())
+* [Arrow Functions](http://jsoverson.github.io/es6repl/#____%5B1%2C2%2C3%2C4%5D.map(%20x%20%3D%3E%20x%20*%202%20))
+
 ## License
 
 ESDown license below.
