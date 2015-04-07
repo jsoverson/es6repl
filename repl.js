@@ -280,7 +280,6 @@ window.onload = function () {
       setInputValue(autoIndent(value));
 
     input.focus();
-    input.scrollIntoView();
   }
 
   function clearLines(max) {
@@ -356,7 +355,6 @@ window.onload = function () {
     input.value = value;
     input.selectionStart = value.length;
     input.selectionEnd = value.length;
-    prompt.scrollIntoView();
     resizeInput();
   }
 
