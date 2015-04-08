@@ -23,6 +23,8 @@
  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var terminal = document.querySelector(".es6repl");
+
 // Adapted from underscore
 var escapeHTML = (function () {
   "use strict";
@@ -69,7 +71,7 @@ window.onload = function () {
   var HELP_TEXT = [
 
     "",
-    "[esdown v" + _esdown.version + "]",
+    "[babel v" + babel.version + "]",
     "",
     "This REPL will translate ES6+ syntax and execute the resulting " +
     "code in your current JavaScript engine.",
@@ -81,8 +83,6 @@ window.onload = function () {
     ".load                  Load a script from a URL",
     ".translate             Translate script code to ES5",
     ".translateModule       Translate module code to ES5",
-    ".parse                 Parse script code",
-    ".parseModule           Parse module code",
     "\n",
 
   ].join("\n");
@@ -104,10 +104,10 @@ window.onload = function () {
       return clearLines(1), NO_OUTPUT
     },
     translate: function (code) {
-      return new Literal(esdown.translate(code))
+      return new Literal(babel.transform(code))
     },
     translateModule: function (code) {
-      return new Literal(esdown.translate(code, {module: true}))
+      //return new Literal(esdown.translate(code, {module: true}))
     },
     parse: function (code) {
       return esdown.parse(code).ast
@@ -171,8 +171,8 @@ window.onload = function () {
   function isRecoverableError(e, code) {
     if (/(\n[ \t]*){2}$/.test(code)) return false;
 
-    var pattern = /^(Unexpected end of input|Unexpected token )/;
-    return e && e.name === 'SyntaxError' && pattern.test(e.message);
+    // assume if the error was at the very end it's due to incomplete code
+    return e && e.name === 'SyntaxError' && e.pos === code.length;
   }
 
   function formatError(error) {
@@ -230,8 +230,8 @@ window.onload = function () {
       if (!executed) {
         executed = true;
         try {
-          code = esdown.translate(code);
-          if (code.indexOf("*") >= 0 && window.regenerator) code = regenerator.compile(code).code;
+          code = babel.transform(code, { blacklist: ["useStrict"] }).code;
+          //if (code.indexOf("*") >= 0 && window.regenerator) code = regenerator.compile(code).code;
           result = replEval(code);
         } catch (x) {
           error = x || {};
@@ -311,43 +311,18 @@ window.onload = function () {
     advanceInput();
   }
 
-  var resizeTimer = 0;
-
-  function resizeInput() {
-
-    if (resizeTimer)
-      return;
-
-    resizeTimer = setTimeout(function () {
-
-      resizeTimer = 0;
-
-      var value = input.value;
-
-      if (value === "") {
-
-        input.style.height = "auto";
-
-      } else {
-
-        hidden.style.width = input.scrollWidth;
-        hidden.value = value;
-        input.style.height = (hidden.scrollHeight + hidden.clientHeight) + "px";
-      }
-
-    }, 50);
+  function scrollToBottom() {
+    terminal.scrollTop = terminal.scrollHeight;
   }
 
   function onKeyPress(evt) {
-    // Enter
     if (evt.keyCode === 13) {
       if (!evt.shiftKey && !evt.ctrlKey) {
         replRun();
         evt.preventDefault();
-        return;
       }
     }
-    resizeInput();
+    scrollToBottom();
   }
 
   function setInputValue(value) {
@@ -355,7 +330,7 @@ window.onload = function () {
     input.value = value;
     input.selectionStart = value.length;
     input.selectionEnd = value.length;
-    resizeInput();
+    scrollToBottom();
   }
 
   function isCursorRow(row) {
@@ -414,7 +389,7 @@ window.onload = function () {
   }
 
   function onPaste() {
-    resizeInput();
+    scrollToBottom();
   }
 
   function createHidden() {
@@ -440,7 +415,7 @@ window.onload = function () {
     program.split('\n').forEach(function(line){
       input.value = line;
       replRun();
-      resizeInput();
+      scrollToBottom();
     })
   }
 
@@ -449,7 +424,6 @@ window.onload = function () {
     function innerText(el) {return el.innerText.trim()}
 
     var out = [].map.call(elems("div.echo"), innerText).filter(isNotCommand).join("\n");
-    console.log(out);
     out = "____" + encodeURIComponent(out);
 
     window.location.hash = out;
@@ -457,8 +431,7 @@ window.onload = function () {
     return window.location.toString().replace(/#[\s\S]*/, "") + "#" + out;
   }
 
-  var terminal = elem(".es6repl"),
-    input = elem(".terminal-input"),
+  var input = elem(".terminal-input"),
     hidden = createHidden(),
     prompt = elem(".es6repl div.input-line span"),
     bufferedInput = "";
