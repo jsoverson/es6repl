@@ -23,7 +23,12 @@
  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var terminal = document.querySelector(".es6repl");
+var terminal = document.querySelector(".es6repl"),
+    link = document.querySelector("#link"),
+    clear = document.querySelector('#clear'),
+    undo = document.querySelector('#undo');
+
+
 
 // Adapted from underscore
 var escapeHTML = (function () {
@@ -247,8 +252,8 @@ window.onload = function () {
             result instanceof Literal ? escapeHTML(result.text) :
               prettyPrint(result, {stylize: stylize, isOpaque: isOpaque});
       }
+      generateLink();
       return output;
-
     });
   }
 
@@ -404,10 +409,10 @@ window.onload = function () {
     var m = /____(.+)/.exec(window.location.hash);
 
     if (m) {
+      undo.href = window.location.hash;
+      undo.style.display = 'inline';
       var program = decodeURIComponent(m[1]);
       runProgram(program)
-      //input.value = decodeURIComponent(m[1]);
-      //resizeInput();
     }
   }
 
@@ -427,6 +432,7 @@ window.onload = function () {
     out = "____" + encodeURIComponent(out);
 
     window.location.hash = out;
+    link.href = window.location.hash;
 
     return window.location.toString().replace(/#[\s\S]*/, "") + "#" + out;
   }
@@ -454,6 +460,21 @@ window.onload = function () {
       consoleLog.apply(this, arguments);
     };
   }
+
+  clear.addEventListener('click', function(e){
+    if (!(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      clearLines(1);
+      generateLink();
+      return false;
+    }
+  });
+
+  undo.addEventListener('click', function(e){
+    window.location = undo.href;
+    clearLines(1);
+    loadFromHash();
+  });
 
   loadFromHash();
 
