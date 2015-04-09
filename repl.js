@@ -450,13 +450,13 @@ window.onload = function () {
   input.focus();
 
   window.print = function (str) {
-    addLine(str + "")
+    addLine([].join.call(arguments, ' ') + "");
   };
 
   if (window.console) {
     var consoleLog = window.console.log;
-    window.console.log = function (arg) {
-      window.print(arg);
+    window.console.log = function () {
+      window.print.apply(null, arguments);
       consoleLog.apply(this, arguments);
     };
   }
