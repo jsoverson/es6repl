@@ -21,6 +21,7 @@
   <script id="polyfills">
     // Production steps of ECMA-262, Edition 6, 22.1.2.1
     // Reference: https://people.mozilla.org/~jorendorff/es6-draft.html#sec-array.from
+    // modified to support iterators
     if (!Array.from) {
       Array.from = (function () {
         var toStr = Object.prototype.toString;
@@ -45,7 +46,19 @@
           var C = this;
 
           // 2. Let items be ToObject(arrayLike).
-          var items = Object(arrayLike);
+          var items;
+          if (arrayLike.next) {
+            items = [];
+            var done = false, next;
+            while (!done) {
+              next = arrayLike.next();
+              done = next.done;
+              if (!done) items.push(next.value);
+            }
+          } else {
+            items = Object(arrayLike);
+          }
+
 
           // 3. ReturnIfAbrupt(items).
           if (arrayLike == null) {
