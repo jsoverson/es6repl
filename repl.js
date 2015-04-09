@@ -235,7 +235,9 @@ window.onload = function () {
       if (!executed) {
         executed = true;
         try {
-          code = babel.transform(code, { blacklist: ["useStrict"] }).code;
+          var blacklist = ["useStrict"];
+          if (ESCOMPAT.ES2015.generators) blacklist.push('regenerator')
+          code = babel.transform(code, { blacklist: blacklist }).code;
           //if (code.indexOf("*") >= 0 && window.regenerator) code = regenerator.compile(code).code;
           result = replEval(code);
         } catch (x) {
@@ -426,7 +428,7 @@ window.onload = function () {
 
   function generateLink() {
     function isNotCommand(text) {return text.charAt(0) !== ".";}
-    function innerText(el) {return el.innerText.trim()}
+    function innerText(el) {return el.textContent.trim()}
 
     var out = [].map.call(elems("div.echo"), innerText).filter(isNotCommand).join("\n");
     out = "____" + encodeURIComponent(out);

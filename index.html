@@ -7,15 +7,14 @@
   <link href="style.css" rel="stylesheet">
   <script src="./pretty-print.js"></script>
   <script src="./babel-min.js"></script>
+  <script src="./compat.js"></script>
 
   <script>
-    var REGENERATOR_URL = "https://facebook.github.io/regenerator/bundle.js";
+    var REGENERATOR_URL = "";
 
     // Load regenerator if engine does not support generator functions
-    try {
-      window.eval("(function*() {})");
-    } catch (x) {
-      document.write("<script src='" + REGENERATOR_URL + "'><\/script>");
+    if (!ESCOMPAT.ES2015.generators) {
+      document.write("<script src='https://facebook.github.io/regenerator/bundle.js'><\/script>");
       document.write("<script>regenerator.runtime()<\/script>");
     }
   </script>
