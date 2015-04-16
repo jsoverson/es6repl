@@ -21,11 +21,11 @@
     "codemirror": "~5.1.0"
   },
   "homepage": "https://github.com/jsoverson/jsconsole",
-  "_release": "154c37cec9",
+  "_release": "989d9c592c",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "154c37cec93099e8ddbd1b4a1ebbf512481709ff"
+    "commit": "989d9c592cbff2824fd775321efca4abbb46f2e5"
   },
   "_source": "git://github.com/jsoverson/jsconsole.git",
   "_target": "*",
