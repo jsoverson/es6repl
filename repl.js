@@ -4,7 +4,17 @@ var container = document.getElementById('es6repl'),
   clear = document.querySelector('#clear'),
   undo = document.querySelector('#undo');
 
-var repl = new Console(container);
+var qs = location.search.substring(1);
+var params = parseQueryString(qs);
+
+function parseQueryString(qs) {
+  var params = qs.split('&')
+                 .map(function(pair){return pair.split('=')})
+                 .reduce(function(prev,next){prev[next[0]] = next[1]; return prev},{});
+  return params;
+}
+
+var repl = new Console(container, {theme:params.theme || 'eclipse'});
 
 var replCommands = {
   link : function(code) {
