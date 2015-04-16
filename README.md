@@ -1,21 +1,26 @@
 es6repl
 -------
 
-This is an adapted version of @zenparsing's esdown repl intended for use
-as an iframe for blogging/documentation purposes.
+This is an embeddable implementation of console.js that transpiles ES6 to ES5 code before evaluation.
+
+The intended use this is via an iframe for blogging, documentation, or experimentation purposes.
 
 ## Usage
 
-* Go to [the repl](http://jsoverson.github.io/es6repl)
-* Type in the code you want to display by default
-* Enter `.link` in the repl
+* Go to [the repl](http://jsoverson.github.io/es6repl).
+* Type in the code you want to display by default.
+* Enter `.link` in the repl.
 * Copy the link for distribution or iframe embedding.
+* (Alternately) Copy the "share" link in the upper right of the console.
 
-## Differences from esdown repl
+## Notes
 
-* Uses babel for compatibility
-* Generated links are executed command-by-command vs as a whole program.
-* Styled to be more amenable to embedding.
+The babel blacklist is populated with features the browser tests to natively support. If there are differences between browsers
+it is likely differences in behavior (maybe in dev release channels) or unavoidable differences in the transpiled es5 version of a feature.
+
+## History
+
+* Initially a port of @zenparsing's esdown repl, it eventually was rewritten as a separate CodeMirror-based repl (jsconsole) with a babel transformed es6 implementation exposed here.
 
 ## Examples
 

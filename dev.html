@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>es6 repl</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="./bower_components/codemirror/lib/codemirror.css">
+  <link rel="stylesheet" href="./bower_components/codemirror/theme/eclipse.css">
+  <link rel="stylesheet" href="./bower_components/jsconsole/styles/console.css">
+  <script src="./bower_components/codemirror/lib/codemirror.js"></script>
+  <script src="./bower_components/codemirror/mode/javascript/javascript.js"></script>
+  <script src="./bower_components/jsconsole/dist/console.js"></script>
+  <link href="style.css" rel="stylesheet">
+
+  <script src="./node_modules/babel/node_modules/babel-core/browser.js"></script>
+  <script src="./compat.js"></script>
+
+  <script>
+    var REGENERATOR_URL = "";
+
+    // Load regenerator if engine does not support generator functions
+    if (!ESCOMPAT.ES2015.generators) {
+      document.write("<script src='https://facebook.github.io/regenerator/bundle.js'><\/script>");
+      document.write("<script>regenerator.runtime()<\/script>");
+    }
+  </script>
+  <script src="polyfill.js"></script>
+  <style>
+  </style>
+</head>
+<body>
+  <div>
+    <div id="es6repl"></div>
+  </div>
+
+  <a href="" class=icon id="undo"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 16 16" data-tags="undo,left,arrow-left"><g transform="scale(0.015625 0.015625)"><path d="M761.862 1024c113.726-206.032 132.888-520.306-313.862-509.824v253.824l-384-384 384-384v248.372c534.962-13.942 594.57 472.214 313.862 775.628z"/></g></svg></a>
+  <a href="http://jsoverson.github.io/es6repl/" class=icon id="clear"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="15" height="15" viewBox="0 0 16 16" ><g transform="scale(0.015625 0.015625)"><path d="M917.806 229.076c-22.212-30.292-53.174-65.7-87.178-99.704s-69.412-64.964-99.704-87.178c-51.574-37.82-76.592-42.194-90.924-42.194h-496c-44.112 0-80 35.888-80 80v864c0 44.112 35.888 80 80 80h736c44.112 0 80-35.888 80-80v-624c0-14.332-4.372-39.35-42.194-90.924zM785.374 174.626c30.7 30.7 54.8 58.398 72.58 81.374h-153.954v-153.946c22.984 17.78 50.678 41.878 81.374 72.572zM896 944c0 8.672-7.328 16-16 16h-736c-8.672 0-16-7.328-16-16v-864c0-8.672 7.328-16 16-16 0 0 495.956-0.002 496 0v224c0 17.672 14.326 32 32 32h224v624z"/></g></svg></a>
+  <a href="http://jsoverson.github.io/es6repl/" class=icon id="link"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 16 16" ><g transform="scale(0.015625 0.015625)"><path d="M192 64v768h768v-768h-768zM896 768h-640v-640h640v640zM128 896v-672l-64-64v800h800l-64-64h-672z"/><path d="M352 256l160 160-192 192 96 96 192-192 160 160v-416z"/></g></svg></a>
+
+  <script src="./repl.js"></script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "jsconsole",
+  "version": "1.0.0",
+  "description": "A JavaScript repl styled after the devtools console",
+  "main": "dist/console.js",
+  "scripts": {
+    "build": "babel --out-dir dist src",
+    "watch": "babel -w --out-dir dist src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsoverson/jsconsole.git"
+  },
+  "author": "Jarrod Overson",
+  "license": "MIT",
+  "homepage": "https://github.com/jsoverson/jsconsole",
+  "devDependencies": {
+    "babel": "^5.0.12"
+  }
+}

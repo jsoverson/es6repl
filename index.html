@@ -4,9 +4,13 @@
   <title>es6 repl</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="style.css" rel="stylesheet">
-  <script src="./pretty-print.js"></script>
-  <script src="./babel-min.js"></script>
+
+  <link rel="stylesheet" href="./build-style.css">
+  <link rel="stylesheet" href="./bower_components/jsconsole/styles/console.css">
+  <script src="./codemirror.bundle.js"></script>
+  <script src="./babel.min.js"></script>
+  <script src="./console.min.js"></script>
+
   <script src="./compat.js"></script>
 
   <script>
@@ -18,128 +22,19 @@
       document.write("<script>regenerator.runtime()<\/script>");
     }
   </script>
-  <script id="polyfills">
-    // Production steps of ECMA-262, Edition 6, 22.1.2.1
-    // Reference: https://people.mozilla.org/~jorendorff/es6-draft.html#sec-array.from
-    // modified to support iterators
-    if (!Array.from) {
-      Array.from = (function () {
-        var toStr = Object.prototype.toString;
-        var isCallable = function (fn) {
-          return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
-        };
-        var toInteger = function (value) {
-          var number = Number(value);
-          if (isNaN(number)) { return 0; }
-          if (number === 0 || !isFinite(number)) { return number; }
-          return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
-        };
-        var maxSafeInteger = Math.pow(2, 53) - 1;
-        var toLength = function (value) {
-          var len = toInteger(value);
-          return Math.min(Math.max(len, 0), maxSafeInteger);
-        };
-
-        // The length property of the from method is 1.
-        return function from(arrayLike/*, mapFn, thisArg */) {
-          // 1. Let C be the this value.
-          var C = this;
-
-          // 2. Let items be ToObject(arrayLike).
-          var items;
-          if (arrayLike.next) {
-            items = [];
-            var done = false, next;
-            while (!done) {
-              next = arrayLike.next();
-              done = next.done;
-              if (!done) items.push(next.value);
-            }
-          } else {
-            items = Object(arrayLike);
-          }
-
-
-          // 3. ReturnIfAbrupt(items).
-          if (arrayLike == null) {
-            throw new TypeError("Array.from requires an array-like object - not null or undefined");
-          }
-
-          // 4. If mapfn is undefined, then let mapping be false.
-          var mapFn = arguments.length > 1 ? arguments[1] : void undefined;
-          var T;
-          if (typeof mapFn !== 'undefined') {
-            // 5. else
-            // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
-            if (!isCallable(mapFn)) {
-              throw new TypeError('Array.from: when provided, the second argument must be a function');
-            }
-
-            // 5. b. If thisArg was supplied, let T be thisArg; else let T be undefined.
-            if (arguments.length > 2) {
-              T = arguments[2];
-            }
-          }
-
-          // 10. Let lenValue be Get(items, "length").
-          // 11. Let len be ToLength(lenValue).
-          var len = toLength(items.length);
-
-          // 13. If IsConstructor(C) is true, then
-          // 13. a. Let A be the result of calling the [[Construct]] internal method of C with an argument list containing the single item len.
-          // 14. a. Else, Let A be ArrayCreate(len).
-          var A = isCallable(C) ? Object(new C(len)) : new Array(len);
-
-          // 16. Let k be 0.
-          var k = 0;
-          // 17. Repeat, while k < len… (also steps a - h)
-          var kValue;
-          while (k < len) {
-            kValue = items[k];
-            if (mapFn) {
-              A[k] = typeof T === 'undefined' ? mapFn(kValue, k) : mapFn.call(T, kValue, k);
-            } else {
-              A[k] = kValue;
-            }
-            k += 1;
-          }
-          // 18. Let putStatus be Put(A, "length", len, true).
-          A.length = len;
-          // 20. Return A.
-          return A;
-        };
-      }());
-    }
-  </script>
+  <script src="polyfill.js"></script>
   <style>
-    #link {
-      position:absolute;
-      top:2px;
-      right:12px;
-    }
-    #clear {
-      position:absolute;
-      top:2px;
-      right:28px;
-    }
-    #undo {
-      display:none;
-      position:absolute;
-      top:2px;
-      right:44px;
-    }
   </style>
 </head>
 <body>
-  <div class="es6repl">
-    <div class="input-line">
-      <span class="prompt"></span>
-      <textarea class="terminal-input" spellcheck="false" rows="2"></textarea>
-    </div>
-    <a href="" id="undo"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 16 16" data-tags="undo,left,arrow-left"><g fill="#fff" transform="scale(0.015625 0.015625)"><path d="M761.862 1024c113.726-206.032 132.888-520.306-313.862-509.824v253.824l-384-384 384-384v248.372c534.962-13.942 594.57 472.214 313.862 775.628z"/></g></svg></a>
-    <a href="http://jsoverson.github.io/es6repl/" id="clear"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="15" height="15" viewBox="0 0 16 16" ><g fill="#fff" transform="scale(0.015625 0.015625)"><path d="M917.806 229.076c-22.212-30.292-53.174-65.7-87.178-99.704s-69.412-64.964-99.704-87.178c-51.574-37.82-76.592-42.194-90.924-42.194h-496c-44.112 0-80 35.888-80 80v864c0 44.112 35.888 80 80 80h736c44.112 0 80-35.888 80-80v-624c0-14.332-4.372-39.35-42.194-90.924zM785.374 174.626c30.7 30.7 54.8 58.398 72.58 81.374h-153.954v-153.946c22.984 17.78 50.678 41.878 81.374 72.572zM896 944c0 8.672-7.328 16-16 16h-736c-8.672 0-16-7.328-16-16v-864c0-8.672 7.328-16 16-16 0 0 495.956-0.002 496 0v224c0 17.672 14.326 32 32 32h224v624z"/></g></svg></a>
-    <a href="http://jsoverson.github.io/es6repl/" id="link"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 16 16" ><g fill="#fff" transform="scale(0.015625 0.015625)"><path d="M192 64v768h768v-768h-768zM896 768h-640v-640h640v640zM128 896v-672l-64-64v800h800l-64-64h-672z"/><path d="M352 256l160 160-192 192 96 96 192-192 160 160v-416z"/></g></svg></a>
+  <div>
+    <div id="es6repl"></div>
   </div>
+
+  <a href="" class=icon id="undo"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 16 16" data-tags="undo,left,arrow-left"><g transform="scale(0.015625 0.015625)"><path d="M761.862 1024c113.726-206.032 132.888-520.306-313.862-509.824v253.824l-384-384 384-384v248.372c534.962-13.942 594.57 472.214 313.862 775.628z"/></g></svg></a>
+  <a href="http://jsoverson.github.io/es6repl/" class=icon id="clear"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="15" height="15" viewBox="0 0 16 16" ><g transform="scale(0.015625 0.015625)"><path d="M917.806 229.076c-22.212-30.292-53.174-65.7-87.178-99.704s-69.412-64.964-99.704-87.178c-51.574-37.82-76.592-42.194-90.924-42.194h-496c-44.112 0-80 35.888-80 80v864c0 44.112 35.888 80 80 80h736c44.112 0 80-35.888 80-80v-624c0-14.332-4.372-39.35-42.194-90.924zM785.374 174.626c30.7 30.7 54.8 58.398 72.58 81.374h-153.954v-153.946c22.984 17.78 50.678 41.878 81.374 72.572zM896 944c0 8.672-7.328 16-16 16h-736c-8.672 0-16-7.328-16-16v-864c0-8.672 7.328-16 16-16 0 0 495.956-0.002 496 0v224c0 17.672 14.326 32 32 32h224v624z"/></g></svg></a>
+  <a href="http://jsoverson.github.io/es6repl/" class=icon id="link"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="16" height="16" viewBox="0 0 16 16" ><g transform="scale(0.015625 0.015625)"><path d="M192 64v768h768v-768h-768zM896 768h-640v-640h640v640zM128 896v-672l-64-64v800h800l-64-64h-672z"/><path d="M352 256l160 160-192 192 96 96 192-192 160 160v-416z"/></g></svg></a>
+
   <script src="./repl.js"></script>
 </body>
 </html>

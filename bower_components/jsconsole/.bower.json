@@ -1,0 +1,34 @@
+{
+  "name": "jsconsole",
+  "main": "dist/console.js",
+  "authors": [
+    "Jarrod Overson <jsoverson@gmail.com>"
+  ],
+  "keywords": [
+    "repl",
+    "console",
+    "devtools"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "codemirror": "~5.1.0"
+  },
+  "homepage": "https://github.com/jsoverson/jsconsole",
+  "_release": "333c391b36",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "333c391b369a52ad91aafc813ab033909b210cb1"
+  },
+  "_source": "git://github.com/jsoverson/jsconsole.git",
+  "_target": "*",
+  "_originalSource": "jsconsole",
+  "_direct": true
+}
