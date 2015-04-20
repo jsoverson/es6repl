@@ -29,5 +29,6 @@
   },
   "_source": "git://github.com/jsoverson/jsconsole.git",
   "_target": "*",
-  "_originalSource": "jsconsole"
+  "_originalSource": "jsconsole",
+  "_direct": true
 }

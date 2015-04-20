@@ -136,6 +136,9 @@ undo.addEventListener('click', function(e){
   window.location = undo.href;
 });
 
+container.addEventListener('click', function(e) {
+  repl.input.focus();
+});
 
 loadFromHash();
 
